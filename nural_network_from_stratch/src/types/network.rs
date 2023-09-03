@@ -17,9 +17,7 @@ impl Perceptron {
     }
 }
 
-trait Layer {
-    fn size(&self) -> usize;
-}
+trait Layer {}
 
 struct NeuralLayer {
     perceptions: Vec<Perceptron>,
@@ -27,48 +25,31 @@ struct NeuralLayer {
 }
 
 impl NeuralLayer {
-    fn setup(
+    fn new(
         size: usize,
         activation_function: fn(f64) -> f64,
         weight_initializer: fn() -> f64,
-    ) -> impl Fn(usize) -> Self {
-        move |input: usize| {
-            let mut perceptions: Vec<Perceptron> = Vec::with_capacity(size);
-            for _ in 0..size {
-                perceptions.push(Perceptron::new(input, weight_initializer));
-            }
+    ) -> Self {
+        let mut perceptions: Vec<Perceptron> = Vec::with_capacity(size);
+        for _ in 0..size {
+            perceptions.push(Perceptron::new(size, weight_initializer));
+        }
 
-            NeuralLayer {
-                perceptions: perceptions,
-                activation_function: activation_function,
-            }
+        NeuralLayer {
+            perceptions: perceptions,
+            activation_function: activation_function,
         }
     }
 }
 
-impl Layer for NeuralLayer {
-    fn size(&self) -> usize {
-        self.perceptions.len()
-    }
-}
+impl Layer for NeuralLayer {}
 
 pub struct Network {
     layers: Vec<Box<dyn Layer>>,
 }
 
 impl Network {
-    pub fn new(input_size: usize, layers: Vec<Box<dyn Fn(usize) -> Box<dyn Layer>>>) -> Self {
-        let mut compiled_layers = Vec::with_capacity(layers.len());
-        let mut current_input_size = input_size;
-
-        for layer_closure in layers.iter() {
-            let compiled_layer = layer_closure(current_input_size);
-            current_input_size = compiled_layer.size();
-            compiled_layers.push(compiled_layer);
-        }
-
-        Network {
-            layers: compiled_layers,
-        }
+    pub fn new(layers: Vec<Box<dyn Layer>>) -> Self {
+        Network { layers }
     }
 }
