@@ -1,17 +1,12 @@
-struct Perceptron {
-    weights: Vec<f64>,
+struct Perceptron<const SIZE: usize> {
+    weights: [f64; SIZE],
     bias: f64,
 }
 
-impl Perceptron {
-    fn new(size: usize, weight_initializer: fn() -> f64) -> Self {
-        let mut weights = Vec::with_capacity(size);
-        for _ in 0..size {
-            weights.push(weight_initializer());
-        }
-
+impl<const SIZE: usize> Perceptron<{ SIZE }> {
+    fn new(weight_initializer: fn() -> f64) -> Self {
         Perceptron {
-            weights,
+            weights: [(); SIZE].map(|_| weight_initializer()),
             bias: weight_initializer(),
         }
     }
@@ -19,37 +14,31 @@ impl Perceptron {
 
 trait Layer {}
 
-struct NeuralLayer {
-    perceptions: Vec<Perceptron>,
+struct NeuralLayer<const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> {
+    perceptions: [Perceptron<INPUT_SIZE>; OUTPUT_SIZE],
     activation_function: fn(f64) -> f64,
 }
 
-impl NeuralLayer {
-    fn new(
-        size: usize,
-        activation_function: fn(f64) -> f64,
-        weight_initializer: fn() -> f64,
-    ) -> Self {
-        let mut perceptions: Vec<Perceptron> = Vec::with_capacity(size);
-        for _ in 0..size {
-            perceptions.push(Perceptron::new(size, weight_initializer));
-        }
-
+impl<const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> NeuralLayer<INPUT_SIZE, OUTPUT_SIZE> {
+    fn new(activation_function: fn(f64) -> f64, weight_initializer: fn() -> f64) -> Self {
         NeuralLayer {
-            perceptions: perceptions,
+            perceptions: [(); OUTPUT_SIZE].map(|_| Perceptron::new(weight_initializer)),
             activation_function: activation_function,
         }
     }
 }
 
-impl Layer for NeuralLayer {}
-
-pub struct Network {
-    layers: Vec<Box<dyn Layer>>,
+impl<const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> Layer
+    for NeuralLayer<INPUT_SIZE, OUTPUT_SIZE>
+{
 }
 
-impl Network {
-    pub fn new(layers: Vec<Box<dyn Layer>>) -> Self {
-        Network { layers }
+pub struct Network<const NUMBER_OF_LAYERS: usize> {
+    layers: [Box<dyn Layer>; NUMBER_OF_LAYERS],
+}
+
+impl<const NUMBER_OF_LAYERS: usize> Network<NUMBER_OF_LAYERS> {
+    pub fn new(layers: [Box<dyn Layer>; NUMBER_OF_LAYERS]) -> Self {
+        Network { layers: layers }
     }
 }
