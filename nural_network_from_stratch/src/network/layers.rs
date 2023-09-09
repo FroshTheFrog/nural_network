@@ -1,13 +1,13 @@
 use crate::network::perceptron::Perceptron;
 use crate::network::types::{ActivationFunction, Layer, WeightInitializer};
 
-struct NeuralLayer {
+pub struct NeuralLayer {
     perceptrons: Vec<Perceptron>,
     activation_function: ActivationFunction,
 }
 
 impl NeuralLayer {
-    fn new(
+    pub fn new(
         activation_function: ActivationFunction,
         weight_initializer: WeightInitializer,
         input_size: usize,
