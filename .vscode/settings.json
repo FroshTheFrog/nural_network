@@ -1,10 +1,11 @@
 {
-    "rust-analyzer.linkedProjects": [
-        ".\\nural_network_from_stratch\\Cargo.toml",
-        ".\\nural_network_from_stratch\\Cargo.toml",
-        ".\\nural_network_from_stratch\\Cargo.toml",
-        ".\\nural_network_from_stratch\\Cargo.toml",
-        ".\\nural_network_from_stratch\\Cargo.toml",
-        ".\\nural_network_from_stratch\\Cargo.toml"
-    ]
+  "rust-analyzer.linkedProjects": [
+    ".\\nural_network_from_stratch\\Cargo.toml",
+    ".\\nural_network_from_stratch\\Cargo.toml",
+    ".\\nural_network_from_stratch\\Cargo.toml",
+    ".\\nural_network_from_stratch\\Cargo.toml",
+    ".\\nural_network_from_stratch\\Cargo.toml",
+    ".\\nural_network_from_stratch\\Cargo.toml",
+    ".\\nural_network_from_stratch\\Cargo.toml"
+  ]
 }

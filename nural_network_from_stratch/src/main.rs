@@ -1,4 +1,4 @@
-mod types;
+mod network;
 
 fn main() {
     println!("Hello, world!");
