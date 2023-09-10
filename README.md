@@ -1,2 +1,1 @@
-# nural_network_from_stratch
- 
+A fully connected neural network implemented in Rust
