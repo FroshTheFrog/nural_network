@@ -1,5 +1,5 @@
 use network::functions::create_random_weight_initializer;
-use network::functions::ReLU;
+use network::functions::RELU;
 use network::layers::NeuralLayer;
 use network::network::Network;
 use network::types::Layer;
@@ -7,9 +7,9 @@ use network::types::Layer;
 mod network;
 
 fn main() {
-    let layer0 = NeuralLayer::new(&ReLU, create_random_weight_initializer::<-1, 1>(), 5, 5);
-    let layer1 = NeuralLayer::new(&ReLU, create_random_weight_initializer::<-1, 1>(), 5, 5);
-    let layer2 = NeuralLayer::new(&ReLU, create_random_weight_initializer::<-1, 1>(), 5, 3);
+    let layer0 = NeuralLayer::new(&RELU, create_random_weight_initializer::<-1, 1>(), 5, 5);
+    let layer1 = NeuralLayer::new(&RELU, create_random_weight_initializer::<-1, 1>(), 5, 5);
+    let layer2 = NeuralLayer::new(&RELU, create_random_weight_initializer::<-1, 1>(), 5, 3);
 
     let layers: Vec<&dyn Layer> = vec![&layer0, &layer1, &layer2];
 

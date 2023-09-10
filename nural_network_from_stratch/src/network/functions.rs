@@ -11,10 +11,10 @@ pub fn create_random_weight_initializer<const LOWER_BOUND: i64, const UPPER_BOUN
     }
 }
 
-pub const ReLU: fn(f64) -> f64 = |x| if x > 0.0 { x } else { 0.0 };
-pub const Sigmoid: fn(f64) -> f64 = |x| 1.0 / (1.0 + (-x).exp());
+pub const RELU: fn(f64) -> f64 = |x| if x > 0.0 { x } else { 0.0 };
+pub const SIGMOID: fn(f64) -> f64 = |x| 1.0 / (1.0 + (-x).exp());
 
-pub const MeanSquaredError: fn(&[f64], &[f64]) -> f64 = |output, expected| {
+pub const MEAN_SQUARED_ERROR: fn(&[f64], &[f64]) -> f64 = |output, expected| {
     output
         .iter()
         .zip(expected)
