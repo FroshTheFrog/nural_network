@@ -1,7 +1,7 @@
-use crate::network::types::ActivationFunction;
-use crate::network::types::WeightInitializer;
+use crate::network::derivatives::WeightInitializer;
+use crate::network::functions::ActivationFunction;
 
-use super::types::PerceptronDerivative;
+use super::derivatives::PerceptronDerivative;
 
 pub struct Perceptron<'a> {
     activation_function: &'a dyn ActivationFunction,

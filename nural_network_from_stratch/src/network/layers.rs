@@ -1,7 +1,22 @@
+use crate::network::derivatives::WeightInitializer;
 use crate::network::perceptron::Perceptron;
-use crate::network::types::{ActivationFunction, Layer, WeightInitializer};
 
-use super::types::{LayerDerivative, PerceptronDerivative};
+use super::{
+    derivatives::{LayerDerivative, PerceptronDerivative},
+    functions::ActivationFunction,
+};
+
+pub trait Layer {
+    fn get_input_size(&self) -> usize;
+    fn get_output_size(&self) -> usize;
+    fn feed_forward(
+        &self,
+        inputs: &[f64],
+        return_derivative: bool,
+    ) -> (Vec<f64>, Option<LayerDerivative>);
+
+    fn update(&mut self, derivative: &LayerDerivative, learning_rate: f64);
+}
 
 pub struct NeuralLayer<'a> {
     perceptrons: Vec<Perceptron<'a>>,

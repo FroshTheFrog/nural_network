@@ -1,6 +1,6 @@
-use crate::network::types::Layer;
+use crate::network::layers::Layer;
 
-use super::types::{CostFunction, NetworkDerivative};
+use super::{derivatives::NetworkDerivative, functions::CostFunction};
 
 type NetworkGradient = NetworkDerivative;
 

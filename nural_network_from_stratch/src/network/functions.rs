@@ -1,7 +1,17 @@
-use crate::network::types::{ActivationFunction, CostFunction, WeightInitializer};
+use crate::network::derivatives::WeightInitializer;
 use rand::Rng;
 
 const H: f64 = 1e-7;
+
+pub trait ActivationFunction {
+    fn activate(&self, x: f64) -> f64;
+    fn derivative(&self, x: f64) -> f64;
+}
+
+pub trait CostFunction {
+    fn cost(&self, output: &[f64], expected: &[f64]) -> f64;
+    fn derivative(&self, output: &[f64], expected: &[f64]) -> Vec<f64>;
+}
 
 pub fn create_random_weight_initializer<const LOWER_BOUND: i64, const UPPER_BOUND: i64>(
 ) -> WeightInitializer {

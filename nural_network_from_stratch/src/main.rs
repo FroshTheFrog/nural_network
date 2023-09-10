@@ -1,8 +1,8 @@
 use network::functions::create_random_weight_initializer;
 use network::functions::RELU;
+use network::layers::Layer;
 use network::layers::NeuralLayer;
 use network::network::Network;
-use network::types::Layer;
 
 use crate::network::functions::SIGMOID;
 
