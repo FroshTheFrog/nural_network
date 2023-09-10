@@ -28,20 +28,20 @@ fn main() {
     let input = vec![[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
     let expected = vec![[1.0, 0.0], [0.0, 1.0], [0.0, 0.0]];
 
-    let number_of_epocs = 10;
+    let number_of_epocs = 100;
 
-    let learning_rate = 0.01;
+    let learning_rate = 0.1;
 
     for _ in 0..number_of_epocs {
+        let mut cost: f64 = 0.0;
         for (input, expected) in input.iter().zip(expected.iter()) {
-            let cost = test_network.train(
+            cost += test_network.train(
                 input.to_vec(),
                 expected.to_vec(),
                 &MeanSquaredError,
                 learning_rate,
             );
-
-            println!("Cost: {}", cost);
         }
+        println!("Cost: {}", cost);
     }
 }
