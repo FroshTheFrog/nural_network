@@ -17,12 +17,3 @@ impl PerceptronDerivative {
         self.derivative_b *= value;
     }
 }
-
-pub fn multiply_layer_derivative_by_vector(derivative: &mut LayerDerivative, values: &Vec<f64>) {
-    derivative
-        .iter_mut()
-        .zip(values.iter())
-        .for_each(|(perceptron_derivative, value)| {
-            perceptron_derivative.multiply(*value);
-        });
-}

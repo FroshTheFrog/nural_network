@@ -28,7 +28,7 @@ fn main() {
     let input = vec![[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
     let expected = vec![[1.0, 0.0], [0.0, 1.0], [0.0, 0.0]];
 
-    let number_of_epocs = 100;
+    let number_of_epocs = 10;
 
     let learning_rate = 0.01;
 
