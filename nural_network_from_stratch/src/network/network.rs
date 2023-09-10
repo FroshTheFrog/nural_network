@@ -1,11 +1,11 @@
 use crate::network::types::Layer;
 
-pub struct Network {
-    layers: Vec<Box<dyn Layer>>,
+pub struct Network<'a> {
+    layers: Vec<&'a dyn Layer>,
 }
 
-impl Network {
-    pub fn new(layers: Vec<Box<dyn Layer>>) -> Self {
+impl<'a> Network<'a> {
+    pub fn new(layers: Vec<&'a dyn Layer>) -> Self {
         assert!(
             Self::verify_layer_dimensions(&layers),
             "Invalid layer dimensions"
@@ -13,7 +13,7 @@ impl Network {
         Self { layers }
     }
 
-    fn verify_layer_dimensions(layers: &[Box<dyn Layer>]) -> bool {
+    fn verify_layer_dimensions(layers: &Vec<&'a dyn Layer>) -> bool {
         layers
             .windows(2)
             .all(|w| w[0].get_output_size() == w[1].get_input_size())
