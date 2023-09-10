@@ -1,9 +1,10 @@
 use crate::network::perceptron::Perceptron;
 use crate::network::types::{ActivationFunction, Layer, WeightInitializer};
 
+use super::types::{LayerDerivative, PerceptronDerivative};
+
 pub struct NeuralLayer<'a> {
-    perceptrons: Vec<Perceptron>,
-    activation_function: &'a dyn ActivationFunction,
+    perceptrons: Vec<Perceptron<'a>>,
 }
 
 impl<'a> NeuralLayer<'a> {
@@ -14,13 +15,10 @@ impl<'a> NeuralLayer<'a> {
         output_size: usize,
     ) -> Self {
         let perceptrons = (0..output_size)
-            .map(|_| Perceptron::new(weight_initializer, input_size))
+            .map(|_| Perceptron::new(weight_initializer, input_size, activation_function))
             .collect();
 
-        Self {
-            perceptrons,
-            activation_function,
-        }
+        Self { perceptrons }
     }
 }
 
@@ -33,10 +31,31 @@ impl Layer for NeuralLayer<'_> {
         self.perceptrons.len()
     }
 
-    fn feed_forward(&self, inputs: &[f64]) -> Vec<f64> {
-        self.perceptrons
+    fn feed_forward(
+        &self,
+        inputs: &[f64],
+        return_derivative: bool,
+    ) -> (Vec<f64>, Option<LayerDerivative>) {
+        let results: Vec<(f64, Option<PerceptronDerivative>)> = self
+            .perceptrons
             .iter()
-            .map(|p| self.activation_function.activate(p.feed_forward(inputs)))
-            .collect()
+            .map(|p| p.feed_forward(inputs, return_derivative))
+            .collect();
+
+        let (outputs, derivatives): (Vec<f64>, Vec<Option<PerceptronDerivative>>) =
+            results.into_iter().unzip();
+
+        if return_derivative {
+            (outputs, Some(derivatives.into_iter().flatten().collect()))
+        } else {
+            (outputs, None)
+        }
+    }
+
+    fn update(&mut self, derivative: &LayerDerivative, learning_rate: f64) {
+        self.perceptrons
+            .iter_mut()
+            .zip(derivative.iter())
+            .for_each(|(p, g)| p.update(g, learning_rate));
     }
 }
