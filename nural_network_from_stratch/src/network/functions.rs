@@ -1,6 +1,7 @@
-use crate::network::types::ActivationFunction;
-use crate::network::types::WeightInitializer;
+use crate::network::types::{ActivationFunction, CostFunction, WeightInitializer};
 use rand::Rng;
+
+const H: f64 = 1e-7;
 
 pub fn create_random_weight_initializer<const LOWER_BOUND: i64, const UPPER_BOUND: i64>(
 ) -> WeightInitializer {
@@ -13,6 +14,15 @@ pub fn create_random_weight_initializer<const LOWER_BOUND: i64, const UPPER_BOUN
 pub const ReLU: fn(f64) -> f64 = |x| if x > 0.0 { x } else { 0.0 };
 pub const Sigmoid: fn(f64) -> f64 = |x| 1.0 / (1.0 + (-x).exp());
 
+pub const MeanSquaredError: fn(&[f64], &[f64]) -> f64 = |output, expected| {
+    output
+        .iter()
+        .zip(expected)
+        .map(|(o, e)| (o - e).powi(2))
+        .sum::<f64>()
+        / output.len() as f64
+};
+
 impl<F> ActivationFunction for F
 where
     F: Fn(f64) -> f64,
@@ -22,7 +32,25 @@ where
     }
 
     fn derivative(&self, x: f64) -> f64 {
-        let h = 1e-7;
-        (self(x + h) - self(x)) / h
+        (self(x + H) - self(x)) / H
+    }
+}
+
+impl<F> CostFunction for F
+where
+    F: Fn(&[f64], &[f64]) -> f64,
+{
+    fn cost(&self, output: &[f64], expected: &[f64]) -> f64 {
+        self(output, expected)
+    }
+
+    fn derivative(&self, output: &[f64], expected: &[f64]) -> Vec<f64> {
+        let mut result = Vec::with_capacity(output.len());
+        for i in 0..output.len() {
+            let mut output_plus_h = output.to_vec();
+            output_plus_h[i] += H;
+            result.push((self(&output_plus_h, expected) - self(output, expected)) / H);
+        }
+        result
     }
 }
